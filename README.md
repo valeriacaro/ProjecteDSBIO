@@ -1,4 +1,6 @@
-# Projecte DSBIO
+# Data Science in Bio Informatics Final Project
+
+GCED - Genetic Breakers
 
 # Objectives 
 
