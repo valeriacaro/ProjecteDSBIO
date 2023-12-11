@@ -10,7 +10,7 @@ This dataset should include the triggering variables of the disease, as well as 
 
 # Variables
 
-The dataset contains 21 variables:
+The dataset contains 20 variables:
 
 * **Sex**: A categorical variable indicating the person's gender. String type.
 * **Sleep less than 6h**: A numerical variable indicating whether the person sleeps less than 6 hours on average per day (value of 1) or not (value of 0).
