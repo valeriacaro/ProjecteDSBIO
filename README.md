@@ -16,7 +16,6 @@ The dataset contains 21 variables:
 * **Sleep less than 6h**: A numerical variable indicating whether the person sleeps less than 6 hours on average per day (value of 1) or not (value of 0).
 * **Visited tropical countries**: A numerical variable indicating whether the person has visited tropical countries before in their life (value of 1) or not (value of 0).
 * **Smoker**: A numerical variable indicating whether the person is or has been a smoker (1 for yes, 0 for no).
-* **FUS**: A numerical variable indicating whether the person has a mutation in the FUS gene (value of 1) or if their status is normal (value of 0).
 * **C9orf72**: A numerical variable indicating whether the person has a mutation in the C9orf72 gene (value of 1) or if their status is normal (value of 0).
 * **Age**: A numerical variable indicating the age of the subject.
 * **Cholesterol Levels**: A numerical variable of float type providing the person's cholesterol level in their latest analysis.
