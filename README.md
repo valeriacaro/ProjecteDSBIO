@@ -31,4 +31,4 @@ The dataset contains 21 variables:
 * **Excessive Alcohol Consumption**: A numerical variable indicating whether the patient is considered to have excessive alcohol consumption (1 for yes, 0 for normal/low).
 * **Hypertension**: A boolean variable indicating whether the patient has hypertension.
 * **SOD1**: A numerical variable indicating whether the person has a mutation in the SOD1 gene (1 for yes, 0 for no).
-* **Probability**: The target variable; a float variable ranging from 0 to 1 indicating the probability that the patient will develop the disease.
+* **Sick**: The target variable; a binary variable indicating whereas the patient will develop the disease.
