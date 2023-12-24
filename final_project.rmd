@@ -1,0 +1,131 @@
+---
+title: "Final Project"
+author: "marti_farre"
+date: "2023-12-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+data <- read.csv("dataset.csv")
+summary(data)
+variables_to_convert <- setdiff(names(data), c("Age", "BMI", "Cholesterol.Levels", "Sick"))
+
+# Convert selected variables to factors
+data[, variables_to_convert] <- lapply(
+  data[, variables_to_convert],
+  factor
+)
+
+data <- na.omit(data)
+```
+```{r}
+library(vcd)
+library(dplyr)
+
+# Create an empty matrix to store association measures
+association_matrix <- matrix(NA, ncol = ncol(data), nrow = ncol(data), dimnames = list(names(data), names(data)))
+
+# Loop through all pairs of variables and calculate Cramer's V
+for (i in 1:(ncol(data) - 1)) {
+  for (j in (i + 1):ncol(data)) {
+    cross_tab <- table(data[, i], data[, j])
+    cramer_v <- assocstats(cross_tab)$cramer
+    association_matrix[i, j] <- cramer_v
+    association_matrix[j, i] <- cramer_v
+  }
+}
+
+# Convert the matrix to a data frame for better readability
+association_df <- as.data.frame(association_matrix)
+
+# Print or explore the association matrix
+association_df
+```
+
+
+```{r}
+# install.packages("corrplot")
+library(ggplot2)
+# cor_matrix <- cor(data)
+# ggplot(data = reshape2::melt(cor_matrix), aes(x = Var1, y = Var2, fill = value)) + geom_tile(color = "white") + scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, limit = c(-1, 1), space = "Lab", name="Correlation") + theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+```{r}
+m <- glm(Sick ~ ., data = data)
+
+summary(m)
+```
+
+```{r}
+m <- glm(Sick ~ Sex + Smoker + C9orf72 + Age + Result.PCR.mycoplasma + Professions + Militar.service + TARDBP + Ethnicity + SOD1 + Sex:Smoker + Sex:Age + Sex:Militar.service, data = data)
+
+summary(m)
+```
+
+```{r}
+data$Professionsconstructor <- as.numeric(data$Professions == "constructor")
+data$Professionsmechanic <- as.numeric(data$Professions == "mechanic")
+data$Professionspainter <- as.numeric(data$Professions == "painter")
+```
+
+```{r}
+m <- glm(Sick ~ Sex + C9orf72 + Result.PCR.mycoplasma + Professionsconstructor + Professionsmechanic + Professionspainter + Militar.service + Ethnicity - 1, data = data)
+
+summary(m)
+```
+
+```{r}
+m$deviance/m$null.deviance
+```
+
+```{r}
+PS<-sum(residuals(m,type="pearson")^2)
+PS/m$df.res
+```
+
+```{r}
+library(car)
+residualPlot(m,smooth=F)
+```
+```{r}
+# Install and load the 'car' package
+library(car)
+
+# Assuming 'model' is your linear model object
+vif_values <- car::vif(m)
+print(vif_values)
+
+```
+
+```{r}
+library(stats)
+
+# Perform the Ljung-Box test
+ljung_box_test <- Box.test(m$residuals, lag = lag, type = "Ljung-Box", fitdf = fitdf)
+print(ljung_box_test)
+```
+```{r}
+predictions <- predict(m, data)
+# Set a threshold of 0.5
+threshold <- 0.5
+
+# Convert probabilities to binary predictions
+binary_predictions <- ifelse(predictions >= threshold, 1, 0)
+
+conf_matrix <- confusionMatrix(data = as.factor(binary_predictions), reference = as.factor(data$Sick))
+print(conf_matrix)
+```
+
+
+```{r}
+data$Sick <- as.numeric(data$Sick)
+m <- glm(Sick ~ Sex + Smoker + C9orf72 + Age + Result.PCR.mycoplasma + Professionsconstructor + Professionsmechanic + Professionspainter + Militar.service + TARDBP + Ethnicity + SOD1 + Sex:Age - 1, data = data, family=binomial("logit"))
+
+summary(m)
+```
+
